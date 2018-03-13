@@ -1,6 +1,4 @@
-import com.github.retronym.SbtOneJar._
 import scoverage.ScoverageKeys._
-import sbtfilter.Plugin._
 import sbt.Keys._
 import sbt._
 
@@ -45,7 +43,7 @@ val slf4j = Seq(
 
 val extraSettings = Defaults.coreDefaultSettings
 
-val sharedSettings = extraSettings ++ filterSettings ++ Seq(
+val sharedSettings = extraSettings ++ Seq(
   organization := "io.github.benwhitehead.interviews",
   scalaVersion := projectScalaVersion,
   version := projectVersion,
@@ -85,24 +83,24 @@ val sharedSettings = extraSettings ++ filterSettings ++ Seq(
     "-Ywarn-value-discard"
   ),
 
-  scalacOptions in (Compile, console) ~= (_ filterNot (_ == "-Ywarn-unused-import")),
+  Compile / console / scalacOptions ~= (_ filterNot (_ == "-Ywarn-unused-import")),
 
-  scalacOptions in (Test, console) ~= (_ filterNot (_ == "-Ywarn-unused-import")),
+  Test / console / scalacOptions ~= (_ filterNot (_ == "-Ywarn-unused-import")),
 
   // Publishing options:
   publishMavenStyle := true,
 
   pomIncludeRepository := { x => false },
 
-  publishArtifact in Test := false,
+  Test / publishArtifact := false,
 
-  parallelExecution in ThisBuild := false,
+  ThisBuild / parallelExecution := false,
 
-  parallelExecution in Test := false,
+  Test / parallelExecution := false,
 
   fork := false,
 
-  cancelable in Global := true
+  Global / cancelable := true
 
 )
 
